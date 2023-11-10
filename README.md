@@ -25,8 +25,5 @@ or with tests
 ```bash
 mvn clean install
 ```
-Then run the application using 
-```bash
-java -cp target/classes org.userapplication.Main
-```
+Then run the application using the JAR created
 

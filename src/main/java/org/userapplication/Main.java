@@ -19,8 +19,11 @@ interface IUserService {
                     String userCountry);
 
     boolean removeUser(String userId);
+
     User getUserById(String userId);
+
     List<User> getAllUsers();
+
     List<User> getUsersSortedByName();
 }
 
@@ -32,8 +35,8 @@ interface IUserService {
 class UserService implements IUserService {
     private UserList userList;
 
-    public UserService() {
-        this.userList = new UserList();
+    public UserService(UserList userList) {
+        this.userList = userList;
     }
 
 
@@ -54,12 +57,11 @@ class UserService implements IUserService {
     }
 
     @Override
-    public boolean removeUser(String userId){
+    public boolean removeUser(String userId) {
         boolean removed = userList.removeUser(userId);
-        if (!removed){
+        if (!removed) {
             System.out.println("User not found with ID: " + userId);
-        }
-        else {
+        } else {
             System.out.println("User removed successfully.");
         }
         return removed;
@@ -69,23 +71,23 @@ class UserService implements IUserService {
     public User getUserById(String userId) {
 
         User user = userList.getUserById(userId);
-        if (user==null){
+        if (user == null) {
             throw new NoSuchElementException("No user found with ID: " + userId);
         }
         return user;
     }
 
     @Override
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         List<User> users = userList.getAllUsers();
-        if (users.isEmpty()){
+        if (users.isEmpty()) {
             System.out.println("No users available");
         }
         return users;
     }
 
     @Override
-    public  List<User> getUsersSortedByName(){
+    public List<User> getUsersSortedByName() {
         return userList.getUsersSortedByName();
     }
 
@@ -180,54 +182,50 @@ class UserInterface {
 
     }
 
-    private void removeUserById(){
+    private void removeUserById() {
         System.out.println("Enter id of the user to remove:");
         String userId = scanner.nextLine();
         try {
             boolean isRemoved = userService.removeUser(userId);
-            if (isRemoved){
+            if (isRemoved) {
                 System.out.println("User removed successfully.");
-            }
-            else {
+            } else {
                 System.out.println("User not found.");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Error when removinf user: " + e.getMessage());
         }
     }
 
 
-    private void showAllUsers(){
+    private void showAllUsers() {
         List<User> users = userService.getAllUsers();
-        if (users.isEmpty()){
+        if (users.isEmpty()) {
             System.out.println("No users available.");
-        }
-        else {
-            for (User user: users) {
+        } else {
+            for (User user : users) {
                 System.out.println(user);
             }
         }
     }
 
-    private void showUserById(){
+    private void showUserById() {
         System.out.println("Enter the ID of the user to display:");
         String userId = scanner.nextLine();
         try {
             User user = userService.getUserById(userId);
             System.out.println(user);
-        }
-        catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             System.out.println("User not found: " + e.getMessage());
         }
     }
 
-    private void showAllUsersSortedByName(){
+    private void showAllUsersSortedByName() {
         List<User> sortedUsers = userService.getUsersSortedByName();
-        if (sortedUsers.isEmpty()){
+        if (sortedUsers.isEmpty()) {
             System.out.println("No Users available.");
-        }
-        else {
-            for (User user: sortedUsers) {
+        } else {
+            for (User user : sortedUsers) {
                 System.out.println(user);
             }
         }
@@ -242,9 +240,9 @@ class UserInterface {
 public class Main {
 
     public static void main(String[] args) {
-
-    IUserService userService = new UserService();
-    UserInterface userInterface = new UserInterface(userService);
-    userInterface.start();
+        UserList userList = new UserList();
+        IUserService userService = new UserService(userList);
+        UserInterface userInterface = new UserInterface(userService);
+        userInterface.start();
     }
 }
